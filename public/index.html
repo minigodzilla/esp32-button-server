@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ESP32 Button Tracker</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h1>ESP32 Button Tracker</h1>
+  <p>Server IP: <span id="serverIP">Loading...</span></p>
+  <p>Total button presses: <span id="count">0</span></p>
+  <h2>Devices:</h2>
+  <ul id="devices"></ul>
+
+  <script>
+    const socket = io();
+    const countEl = document.getElementById('count');
+    const devicesEl = document.getElementById('devices');
+    const serverIPEl = document.getElementById('serverIP');
+
+    socket.on('init', ({ devices, totalPresses, serverIP }) => {
+      devices.forEach(id => addDevice(id));
+      countEl.textContent = totalPresses;
+      serverIPEl.textContent = serverIP;
+    });
+
+    socket.on('new-device', (id) => {
+      addDevice(id);
+    });
+
+    socket.on('button-press', ({ deviceId, totalPresses }) => {
+      countEl.textContent = totalPresses;
+      console.log(`Button press from ${deviceId}`);
+    });
+
+    function addDevice(id) {
+      const li = document.createElement('li');
+      li.textContent = id;
+      devicesEl.appendChild(li);
+    }
+  </script>
+</body>
+</html>
