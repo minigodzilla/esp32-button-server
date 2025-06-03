@@ -8,6 +8,9 @@
   <h1>ESP32 Button Tracker</h1>
   <p>Server IP: <span id="serverIP">Loading...</span></p>
   <p>Total button presses: <span id="count">0</span></p>
+
+  <button onclick="reset()">Reset Count</button>
+
   <h2>Devices:</h2>
   <ul id="devices"></ul>
 
@@ -16,6 +19,7 @@
     const countEl = document.getElementById('count');
     const devicesEl = document.getElementById('devices');
     const serverIPEl = document.getElementById('serverIP');
+    const animalNames = ['dog', 'cat', 'bird', 'fish', 'horse', 'rabbit', 'snake', 'tiger', 'lion', 'elephant'];
 
     socket.on('init', ({ devices, totalPresses, serverIP }) => {
       devices.forEach(id => addDevice(id));
@@ -34,8 +38,15 @@
 
     function addDevice(id) {
       const li = document.createElement('li');
-      li.textContent = id;
+      const animalName = animalNames.shift();
+      li.textContent = `${animalName} (${id})`;
       devicesEl.appendChild(li);
+    }
+
+    function reset() {
+      fetch('/reset', { method: 'POST' });
+      countEl.textContent = 0;
+    //   devicesEl.innerHTML = '';
     }
   </script>
 </body>

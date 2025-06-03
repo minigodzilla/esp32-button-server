@@ -33,17 +33,27 @@ app.use(express.json());
 
 // Endpoint ESP32 devices will POST to
 app.post('/button-press', (req, res) => {
-  const deviceId = req.ip; // could also use req.body.id if you want
+  let deviceId = req.ip; // could also use req.body.id if you want
   const isNewDevice = !knownDevices.has(deviceId);
-
+ 
   if (isNewDevice) {
     knownDevices.add(deviceId);
     io.emit('new-device', deviceId);
+    console.log(`New device: ${deviceId}`);
   }
 
   totalPresses++;
   io.emit('button-press', { deviceId, totalPresses });
 
+  res.sendStatus(200);
+});
+
+// Reset devices and button press count
+app.post('/reset', (req, res) => {
+  totalPresses = 0;
+//   knownDevices.clear();
+//   io.emit('init', { devices: [], totalPresses: 0 });
+  io.emit('init', { totalPresses: 0 });
   res.sendStatus(200);
 });
 
