@@ -22,9 +22,14 @@
     const animalNames = ['dog', 'cat', 'bird', 'fish', 'horse', 'rabbit', 'snake', 'tiger', 'lion', 'elephant'];
 
     socket.on('init', ({ devices, totalPresses, serverIP }) => {
-      devices.forEach(id => addDevice(id));
+      if (devices) {  // Only process devices if they were sent
+        devices.forEach(id => addDevice(id));
+      }
+      if (serverIP) {  // Only update server IP if it was sent
+        serverIPEl.textContent = serverIP;
+      }
+      // Always update the total presses count
       countEl.textContent = totalPresses;
-      serverIPEl.textContent = serverIP;
     });
 
     socket.on('new-device', (id) => {
