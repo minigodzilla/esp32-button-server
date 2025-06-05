@@ -8,7 +8,21 @@
 /* global */
 body {
   font-family: Arial, sans-serif;
+  font-size: 32px;
+  color: #fff;
+  text-shadow: 0 0 10px #000;
   background-color: #000;
+}
+
+button {
+  font-size: 32px;
+  color: #fff;
+  text-shadow: 0 0 10px #000;
+  background-color: #000;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin-top: 32px;
 }
 
 .container {
@@ -17,4 +31,46 @@ body {
   position: relative;
   background-image: url('assets/scene.jpg');
   background-size: 100% 100%;
+}
+
+#climber {
+  position: absolute;
+  top: 800px;
+  left: 400px;
+  width: 140px;
+  height: 260px;
+}
+
+.status {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+  text-align: right;
+}
+
+#devices {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  width: 75%;
+  display: flex;
+  flex-wrap: wrap;
+  transform: scale(0.5);
+  transform-origin: top left;
+}
+
+#devices .device {
+    margin-bottom: 32px;
+}
+
+#devices .device img {
+  width: 256px;
+  height: 256px;
+  transform: scale(1.25);
+}
+
+#devices .device p {
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
 }
