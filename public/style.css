@@ -83,3 +83,19 @@ button {
   text-align: center;
   font-weight: bold;
 }
+
+body .game-won {
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform: scale(0.25);
+  transition: all 1s ease-in-out;
+}
+
+body.game-won .game-won {
+  opacity: 1;
+  transform: scale(1);
+}
