@@ -10,10 +10,11 @@
     <div class="status">
       <p>Server IP: <span id="serverIP">Loading...</span></p>
       <p>Total button presses: <span id="count">0</span></p>
+      <p>Climb status: <span id="climbStatus">0</span></p>
       <button onclick="reset()">Reset</button>
     </div>
     <div id="climber">
-      <img src="assets/climber.png" alt="climber">
+      <img src="assets/climber.png" alt="climber" style="transform: translate(860px, -860px);">
     </div>
     <div id="devices">
     </div>
@@ -24,6 +25,7 @@
     const countEl = document.getElementById('count');
     const devicesEl = document.getElementById('devices');
     const serverIPEl = document.getElementById('serverIP');
+    const climbStatusEl = document.getElementById('climbStatus');
     const animalNames = [
       ["okwáho", "okwaho"],
       ["anonhwaráweron", "anonhwaraweron"],
@@ -39,6 +41,9 @@
       ["karhakón:ha", "karhakonha"]
     ];
 
+    let totalPresses;
+    let climbStatus = 0;  // Initialize to 0
+
     socket.on('init', ({ devices, totalPresses, serverIP }) => {
       if (devices) {  // Only process devices if they were sent
         devices.forEach(id => addDevice(id));
@@ -46,16 +51,19 @@
       if (serverIP) {  // Only update server IP if it was sent
         serverIPEl.textContent = serverIP;
       }
-      // Always update the total presses count
+      // Update totalPresses count
       countEl.textContent = totalPresses;
     });
-
+    
     socket.on('new-device', (id) => {
       addDevice(id);
     });
 
     socket.on('button-press', ({ deviceId, totalPresses }) => {
       countEl.textContent = totalPresses;
+      // Increment climbStatus, but cap at 100
+      climbStatus = Math.min(100, climbStatus + 1);
+      climbStatusEl.textContent = climbStatus;
       console.log(`Button press from ${deviceId}`);
     });
 
@@ -74,7 +82,18 @@
     function reset() {
       fetch('/reset', { method: 'POST' });
       countEl.textContent = 0;
+      climbStatus = 0;
+      climbStatusEl.textContent = 0;
     }
+
+    // Decay mechanism - decrease climbStatus by 1 every second, with floor of 0
+    setInterval(() => {
+      if (climbStatus > 0) {
+        climbStatus = Math.max(0, climbStatus - 1);
+        climbStatusEl.textContent = climbStatus;
+      }
+    }, 1000);
+
   </script>
 </body>
 </html>

@@ -28,14 +28,6 @@ const localIP = getLocalIP();
 const knownDevices = new Set();
 let totalPresses = 0;
 
-// Decay mechanism - decrease totalPresses by 1 every second
-setInterval(() => {
-  if (totalPresses > 0) {
-    totalPresses--;
-    io.emit('init', { totalPresses }); // Emit update to all clients
-  }
-}, 1000);
-
 app.use(express.static('public'));
 app.use(express.json());
 
