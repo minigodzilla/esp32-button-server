@@ -69,7 +69,7 @@
     socket.on('button-press', ({ deviceId, totalPresses }) => {
       countEl.textContent = totalPresses;
       if (climbStatus < 100) {  // Only increment if not at max
-        climbStatus = Math.min(100, climbStatus + 0.5);
+        climbStatus = Math.min(100, climbStatus + 0.25);
         climbStatusEl.textContent = climbStatus;
         updateClimberPosition();
         
