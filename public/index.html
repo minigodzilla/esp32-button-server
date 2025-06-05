@@ -7,10 +7,15 @@
 </head>
 <body>
   <div class="container">
-    <p>Server IP: <span id="serverIP">Loading...</span></p>
-    <p>Total button presses: <span id="count">0</span></p>
-    <button onclick="reset()">Reset</button>
+    <div class="status">
+      <p>Server IP: <span id="serverIP">Loading...</span></p>
+      <p>Total button presses: <span id="count">0</span></p>
+      <button onclick="reset()">Reset</button>
+    </div>
     <div id="devices">
+    </div>
+    <div class="climber">
+      <img src="assets/climber.png" alt="climber">
     </div>
   </div>
 
@@ -19,7 +24,20 @@
     const countEl = document.getElementById('count');
     const devicesEl = document.getElementById('devices');
     const serverIPEl = document.getElementById('serverIP');
-    const animalNames = ['dog', 'cat', 'bird', 'fish', 'horse', 'rabbit', 'snake', 'tiger', 'lion', 'elephant'];
+    const animalNames = [
+      ["okwáho", "okwaho"],
+      ["anonhwaráweron", "anonhawaraweron"],
+      ["oskenón:ton", "oskenonton"],
+      ["ohkwá:ri", "ohkwari"],
+      ["tsítsho", "tsitsho"],
+      ["á:kwe'ks", "akweks"],
+      ["onkwe'tá:kon", "onkwetakon"],
+      ["kwareró:ha", "kwareroha"],
+      ["a'nó:wara", "anowara"],
+      ["kontihnawá:ras", "kontihnawaras"],
+      ["tsianì:to", "tsianito"],
+      ["karhakón:ha", "karhakonha"]
+    ];
 
     socket.on('init', ({ devices, totalPresses, serverIP }) => {
       if (devices) {  // Only process devices if they were sent
@@ -42,13 +60,13 @@
     });
 
     function addDevice(id) {
-      const animalName = animalNames.shift();
+      const animalNamePair = animalNames.shift();
       const deviceEl = document.createElement('div');
       deviceEl.classList.add('device');
       deviceEl.classList.add(id);
       deviceEl.innerHTML = `
-        <img src="${animalName}.png" alt="${animalName}">
-        <p>${animalName}</p>
+        <img src="assets/animal/${animalNamePair[1]}.png" alt="${animalNamePair[0]}">
+        <p>${animalNamePair[0]}</p>
       `;
       devicesEl.appendChild(deviceEl);
     }
