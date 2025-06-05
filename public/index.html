@@ -68,7 +68,7 @@
 
     socket.on('button-press', ({ deviceId, totalPresses }) => {
       countEl.textContent = totalPresses;
-      climbStatus = Math.min(100, climbStatus + 1);
+      climbStatus = Math.min(100, climbStatus + 0.5);
       climbStatusEl.textContent = climbStatus;
       updateClimberPosition();
       console.log(`Button press from ${deviceId}`);
