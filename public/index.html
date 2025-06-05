@@ -11,11 +11,6 @@
     <p>Total button presses: <span id="count">0</span></p>
     <button onclick="reset()">Reset</button>
     <div id="devices">
-      <!-- example of a device -->
-      <div class="device dog">
-        <img src="dog.png" alt="dog">
-        <p>dog</p>
-      </div>
     </div>
   </div>
 
@@ -47,10 +42,7 @@
     });
 
     function addDevice(id) {
-      // const li = document.createElement('li');
       const animalName = animalNames.shift();
-      // li.textContent = `${animalName} (${id})`;
-      // devicesEl.appendChild(li);
       const deviceEl = document.createElement('div');
       deviceEl.classList.add('device');
       deviceEl.classList.add(id);
@@ -58,12 +50,12 @@
         <img src="${animalName}.png" alt="${animalName}">
         <p>${animalName}</p>
       `;
+      devicesEl.appendChild(deviceEl);
     }
 
     function reset() {
       fetch('/reset', { method: 'POST' });
       countEl.textContent = 0;
-    //   devicesEl.innerHTML = '';
     }
   </script>
 </body>
