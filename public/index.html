@@ -13,8 +13,8 @@
       <p>Climb status: <span id="climbStatus">0</span></p>
       <button onclick="reset()">Reset</button>
     </div>
-    <div id="climber">
-      <img src="assets/climber.png" alt="climber" style="transform: translate(860px, -860px);">
+    <div id="climber" style="transform: translate(860px, -860px);">
+      <img src="assets/climber.png" alt="climber">
     </div>
     <div id="devices">
     </div>
@@ -26,6 +26,7 @@
     const devicesEl = document.getElementById('devices');
     const serverIPEl = document.getElementById('serverIP');
     const climbStatusEl = document.getElementById('climbStatus');
+    const climberEl = document.querySelector('#climber img');
     const animalNames = [
       ["okwáho", "okwaho"],
       ["anonhwaráweron", "anonhwaraweron"],
@@ -59,11 +60,17 @@
       addDevice(id);
     });
 
+    function updateClimberPosition() {
+      const x = (climbStatus * 8.6);  // 860/100 = 8.6
+      const y = -(climbStatus * 8.6);  // Negative because we're moving up
+      climberEl.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
     socket.on('button-press', ({ deviceId, totalPresses }) => {
       countEl.textContent = totalPresses;
-      // Increment climbStatus, but cap at 100
       climbStatus = Math.min(100, climbStatus + 1);
       climbStatusEl.textContent = climbStatus;
+      updateClimberPosition();
       console.log(`Button press from ${deviceId}`);
     });
 
@@ -84,6 +91,7 @@
       countEl.textContent = 0;
       climbStatus = 0;
       climbStatusEl.textContent = 0;
+      updateClimberPosition();
     }
 
     // Decay mechanism - decrease climbStatus by 1 every second, with floor of 0
@@ -91,6 +99,7 @@
       if (climbStatus > 0) {
         climbStatus = Math.max(0, climbStatus - 1);
         climbStatusEl.textContent = climbStatus;
+        updateClimberPosition();
       }
     }, 1000);
 
