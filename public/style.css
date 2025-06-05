@@ -65,6 +65,14 @@ button {
 }
 
 #devices .device img {
+  transition: transform 0.25s ease-in-out;
+}
+
+#devices .device.pressed img {
+  transform: scale(1.5);
+}
+
+#devices .device img {
   width: 256px;
   height: 256px;
   transform: scale(1.25);

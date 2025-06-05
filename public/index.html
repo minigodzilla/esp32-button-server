@@ -79,11 +79,19 @@
         }
       }
       console.log(`Button press from ${deviceId}`);
+      // add a classname "pressed" to the device div that is the device ID, then remove it after 500 ms
+      const deviceEl = document.getElementById(deviceId);
+      deviceEl.classList.add('pressed');
+      setTimeout(() => {
+        deviceEl.classList.remove('pressed');
+      }, 500);
     });
 
     function addDevice(id) {
       const animalNamePair = animalNames.shift();
       const deviceEl = document.createElement('div');
+      // give the device div an ID of the device ID
+      deviceEl.id = id;
       deviceEl.classList.add('device');
       deviceEl.classList.add(id);
       deviceEl.innerHTML = `
