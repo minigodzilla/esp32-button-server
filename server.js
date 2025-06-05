@@ -51,9 +51,12 @@ app.post('/button-press', (req, res) => {
 // Reset devices and button press count
 app.post('/reset', (req, res) => {
   totalPresses = 0;
-//   knownDevices.clear();
-//   io.emit('init', { devices: [], totalPresses: 0 });
-  io.emit('init', { totalPresses: 0 });
+  knownDevices.clear();
+  io.emit('reset-all', {
+    devices: [],
+    totalPresses: 0,
+    serverIP: localIP
+  });
   res.sendStatus(200);
 });
 

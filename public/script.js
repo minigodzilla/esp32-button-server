@@ -84,12 +84,48 @@ function addDevice(id) {
   devicesEl.appendChild(deviceEl);
 }
 
+function clearDevices() {
+  devicesEl.innerHTML = '';
+  // Reset the animal names array to its original state
+  animalNames.length = 0;
+  animalNames.push(
+    ["okwáho", "okwaho"],
+    ["anonhwaráweron", "anonhwaraweron"],
+    ["oskenón:ton", "oskenonton"],
+    ["ohkwá:ri", "ohkwari"],
+    ["tsítsho", "tsitsho"],
+    ["á:kwe'ks", "akweks"],
+    ["onkwe'tá:kon", "onkwetakon"],
+    ["kwareró:ha", "kwareroha"],
+    ["a'nó:wara", "anowara"],
+    ["kontihnawá:ras", "kontihnawaras"],
+    ["tsianì:to", "tsianito"],
+    ["karhakón:ha", "karhakonha"]
+  );
+}
+
 function reset() {
   fetch('/reset', { method: 'POST' });
   countEl.textContent = 0;
   updateClimbStatus(0);
-  document.body.classList.remove('game-won');  // Remove win state
+  clearDevices();
+  document.body.classList.remove('game-won');
 }
+
+// Listen for the reset-all event from the server
+socket.on('reset-all', ({ devices, totalPresses, serverIP }) => {
+  countEl.textContent = totalPresses;
+  updateClimbStatus(0);
+  clearDevices();
+  document.body.classList.remove('game-won');
+  if (serverIP) {
+    serverIPEl.textContent = serverIP;
+  }
+  // Re-add any devices that were sent
+  if (devices && devices.length > 0) {
+    devices.forEach(id => addDevice(id));
+  }
+});
 
 // Decay mechanism - decrease climbStatus by 1 every second, with floor of 0
 setInterval(() => {
