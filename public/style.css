@@ -39,7 +39,7 @@ button {
   left: 400px;
   width: 140px;
   height: 260px;
-  transition: transform 0.25s ease-in-out;
+  transition: transform 1s ease-in-out;
 }
 
 .status {
