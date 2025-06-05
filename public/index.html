@@ -3,16 +3,21 @@
 <head>
   <title>ESP32 Button Tracker</title>
   <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>ESP32 Button Tracker</h1>
-  <p>Server IP: <span id="serverIP">Loading...</span></p>
-  <p>Total button presses: <span id="count">0</span></p>
-
-  <button onclick="reset()">Reset Count</button>
-
-  <h2>Devices:</h2>
-  <ul id="devices"></ul>
+  <div class="container">
+    <p>Server IP: <span id="serverIP">Loading...</span></p>
+    <p>Total button presses: <span id="count">0</span></p>
+    <button onclick="reset()">Reset</button>
+    <div id="devices">
+      <!-- example of a device -->
+      <div class="device dog">
+        <img src="dog.png" alt="dog">
+        <p>dog</p>
+      </div>
+    </div>
+  </div>
 
   <script>
     const socket = io();
@@ -42,10 +47,17 @@
     });
 
     function addDevice(id) {
-      const li = document.createElement('li');
+      // const li = document.createElement('li');
       const animalName = animalNames.shift();
-      li.textContent = `${animalName} (${id})`;
-      devicesEl.appendChild(li);
+      // li.textContent = `${animalName} (${id})`;
+      // devicesEl.appendChild(li);
+      const deviceEl = document.createElement('div');
+      deviceEl.classList.add('device');
+      deviceEl.classList.add(id);
+      deviceEl.innerHTML = `
+        <img src="${animalName}.png" alt="${animalName}">
+        <p>${animalName}</p>
+      `;
     }
 
     function reset() {

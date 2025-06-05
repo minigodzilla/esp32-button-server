@@ -1,29 +1,25 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char* ssid = "BELL166";
-const char* password = "D7E6665A34E4";
+const char* ssid = "MagicWorkshop";
+const char* password = "toronto2025";
 
-const char* serverURL = "http://192.168.2.39:3000/button-press";
+const char* serverURL = "http://192.168.0.101:3000/button-press";
 
 const int ledPin = 2;
 const int buttonPin = 13;
 
 int buttonState = HIGH;
-int lastButtonReading = HIGH;
-unsigned long lastDebounceTime = 0;
-const unsigned long debounceDelay = 50;
-
 bool alreadySent = false;
 
-String deviceName; // will be set from MAC
+unsigned long lastLoopTime = 0;
+const unsigned long loopInterval = 10; // milliseconds = 100 Hz
 
 void setup() {
   Serial.begin(115200);
   pinMode(ledPin, OUTPUT);
   pinMode(buttonPin, INPUT_PULLUP);
 
-  // Connect to WiFi
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED) {
@@ -33,36 +29,29 @@ void setup() {
   Serial.println("\nConnected to WiFi!");
   Serial.println(WiFi.localIP());
 
-  // Generate unique device name from MAC
-  deviceName = "esp32-" + WiFi.macAddress();
-  deviceName.replace(":", ""); // clean up colons for simplicity
-  Serial.print("Device ID: ");
-  Serial.println(deviceName);
+  String mac = WiFi.macAddress();
+  mac.replace(":", "");
+  Serial.print("Device MAC: ");
+  Serial.println(mac);
 }
 
 void loop() {
+  unsigned long now = millis();
+  if (now - lastLoopTime < loopInterval) return;
+  lastLoopTime = now;
+
   int reading = digitalRead(buttonPin);
 
-  if (reading != lastButtonReading) {
-    lastDebounceTime = millis();
+  if (reading == LOW && !alreadySent) {
+    digitalWrite(ledPin, HIGH);
+    sendButtonPress();
+    alreadySent = true;
   }
 
-  if ((millis() - lastDebounceTime) > debounceDelay) {
-    if (reading != buttonState) {
-      buttonState = reading;
-
-      if (buttonState == LOW && !alreadySent) {
-        digitalWrite(ledPin, HIGH);
-        sendButtonPress();
-        alreadySent = true;
-      } else if (buttonState == HIGH) {
-        digitalWrite(ledPin, LOW);
-        alreadySent = false;
-      }
-    }
+  if (reading == HIGH && alreadySent) {
+    digitalWrite(ledPin, LOW);
+    alreadySent = false;
   }
-
-  lastButtonReading = reading;
 }
 
 void sendButtonPress() {
@@ -71,7 +60,10 @@ void sendButtonPress() {
     http.begin(serverURL);
     http.addHeader("Content-Type", "application/json");
 
-    String payload = "{\"device\":\"" + deviceName + "\",\"event\":\"press\"}";
+    String mac = WiFi.macAddress();
+    mac.replace(":", "");
+
+    String payload = "{\"device\":\"" + mac + "\",\"event\":\"press\"}";
 
     int httpResponseCode = http.POST(payload);
     Serial.print("POST response: ");
