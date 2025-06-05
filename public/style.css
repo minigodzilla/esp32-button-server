@@ -93,6 +93,7 @@ body .game-won {
   opacity: 0;
   transform: scale(0.25);
   transition: all 1s ease-in-out;
+  pointer-events: none;
 }
 
 body.game-won .game-won {

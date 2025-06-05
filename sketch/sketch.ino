@@ -4,7 +4,7 @@
 const char* ssid = "MagicWorkshop";
 const char* password = "toronto2025";
 
-const char* serverURL = "http://192.168.0.100:3000/button-press";
+const char* serverURL = "http://192.168.0.101:3000/button-press";
 
 const int ledPin = 2;
 const int buttonPin = 13;
